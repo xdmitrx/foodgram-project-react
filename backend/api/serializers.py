@@ -14,6 +14,8 @@ from recipes.models import (Ingredient, IngredientValue, Recipe,
                             Tag, Cart, Favorites)
 from users.models import Subscribtion
 
+from . import constants
+
 
 User = get_user_model()
 
@@ -45,7 +47,7 @@ class CustomUserSerializer(UserSerializer):
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
-        return Subscribtion.objects.filter(user=user, author=obj).exists()
+        return Subscribtion.subscriber.all()
 
 
 class SubscribtionSerializer(CustomUserSerializer):
@@ -61,7 +63,7 @@ class SubscribtionSerializer(CustomUserSerializer):
     def validate(self, data):
         author = self.instance
         user = self.context.get('request').user
-        if Subscribtion.objects.filter(author=author, user=user).exists():
+        if Subscribtion.User.all():
             raise ValidationError(
                 detail='You are already subscribed',
                 code=status.HTTP_400_BAD_REQUEST
@@ -135,19 +137,13 @@ class RecipeReadSerializer(ModelSerializer):
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
-        # return user.favorites.exists()
-        return Favorites.objects.filter(
-                user=self.context['request'].user,
-                recipe=obj).exists()
+        return Favorites.favorites.all()
 
     def get_is_in_shopping_cart(self, obj):
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
-        # return user.shopping_cart.exists()
-        return Cart.objects.filter(
-                user=self.context['request'].user,
-                recipe=obj).exists()
+        return Cart.shopping_cart.all()
 
 
 class IngredientInRecipeWriteSerializer(ModelSerializer):
@@ -191,9 +187,9 @@ class RecipeWriteSerializer(ModelSerializer):
                 raise ValidationError({
                     'ingredients': 'Ingridients should be unique'
                 })
-            if int(item['amount']) <= 0:
+            if int(item['amount']) > constants.INGREDIENTS_AMOUNT:
                 raise ValidationError({
-                    'amount': 'Amount should be > 0'
+                    'amount': 'Amount should be <= 32000'
                 })
             ingredients_list.add(ingredient)
         return value

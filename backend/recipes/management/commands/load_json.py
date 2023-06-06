@@ -1,5 +1,7 @@
-from django.core.management.base import BaseCommand
 import json
+
+from django.core.management.base import BaseCommand
+
 from recipes.models import Ingredient
 
 
@@ -13,4 +15,4 @@ class Command(BaseCommand):
         with open(options['ingredients.json']) as f:
             data = json.load(f)
         for ingredient in data:
-            Ingredient.objects.create(**ingredient)
+            Ingredient.objects.bulk_create(**ingredient)
