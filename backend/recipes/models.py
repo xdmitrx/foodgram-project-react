@@ -64,8 +64,7 @@ class Tag(models.Model):
 
 class Recipe(models.Model):
     """Model for Recipe entity."""
-    name = models.CharField('Name',
-                            verbose_name='Название блюда',
+    name = models.CharField(verbose_name='Название блюда',
                             max_length=128,
                             unique=True,
                             )
@@ -97,7 +96,6 @@ class Recipe(models.Model):
                                   verbose_name='Тэги',
                                   )
     cooking_time = models.PositiveSmallIntegerField(
-        'Cooking time',
         verbose_name='Время приготовления',
         validators=[
             MaxValueValidator(constants.MAX_COOKING_TIME),
@@ -121,12 +119,12 @@ class Recipe(models.Model):
 class IngredientValue(models.Model):
     """Model for value of each ingredient in recipe entity."""
     ingredient = models.ForeignKey(Ingredient,
-                                   verbose_name='Ингредиент',
+                                   verbose_name='Связанные игредиенты',
                                    db_index=True,
                                    on_delete=models.CASCADE,
                                    )
     recipe = models.ForeignKey(Recipe,
-                               verbose_name='Рецепт',
+                               verbose_name='В каких рецептах',
                                db_index=True,
                                on_delete=models.CASCADE,
                                related_name='ingredient_list',

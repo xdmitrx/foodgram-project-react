@@ -15,4 +15,4 @@ class Command(BaseCommand):
         with open(options['ingredients.json']) as f:
             data = json.load(f)
         for ingredient in data:
-            Ingredient.objects.bulk_create(**ingredient)
+            Ingredient.objects.create(**ingredient)

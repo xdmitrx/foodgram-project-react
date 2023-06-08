@@ -39,16 +39,19 @@ class CustomUserViewSet(UserViewSet):
         permission_classes=[IsAuthenticated]
     )
     def subscribe(self, request, **kwargs):
+        print('хороший человек1')
         user = request.user
         user_id = self.kwargs.get('id')
         author = get_object_or_404(User, id=user_id)
 
         if request.method == 'POST':
+            print('хороший человек2')
             serializer = SubscribtionSerializer(author,
                                                 data=request.data,
                                                 context={"request": request})
-            serializer.is_valid(raise_exception=True)
+            serializer.is_valid()
             Subscribtion.objects.create(user=user, author=author)
+            print('хороший человек3')
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         if request.method == 'DELETE':

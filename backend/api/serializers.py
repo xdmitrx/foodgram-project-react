@@ -47,7 +47,7 @@ class CustomUserSerializer(UserSerializer):
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
-        return Subscribtion.subscriber.all()
+        return Subscribtion.objects.filter(user=user, author=obj).exists()
 
 
 class SubscribtionSerializer(CustomUserSerializer):
@@ -63,7 +63,7 @@ class SubscribtionSerializer(CustomUserSerializer):
     def validate(self, data):
         author = self.instance
         user = self.context.get('request').user
-        if Subscribtion.User.all():
+        if Subscribtion.objects.filter(author=author, user=user).exists():
             raise ValidationError(
                 detail='You are already subscribed',
                 code=status.HTTP_400_BAD_REQUEST
@@ -137,13 +137,17 @@ class RecipeReadSerializer(ModelSerializer):
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
-        return Favorites.favorites.all()
+        return Favorites.objects.filter(
+                user=self.context['request'].user,
+                recipe=obj).exists()
 
     def get_is_in_shopping_cart(self, obj):
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
-        return Cart.shopping_cart.all()
+        return Cart.objects.filter(
+                user=self.context['request'].user,
+                recipe=obj).exists()
 
 
 class IngredientInRecipeWriteSerializer(ModelSerializer):
@@ -187,9 +191,9 @@ class RecipeWriteSerializer(ModelSerializer):
                 raise ValidationError({
                     'ingredients': 'Ingridients should be unique'
                 })
-            if int(item['amount']) > constants.INGREDIENTS_AMOUNT:
+            if int(item['amount']) <= constants.INGREDIENTS_AMOUNT:
                 raise ValidationError({
-                    'amount': 'Amount should be <= 32000'
+                    'amount': 'Amount should be > 0'
                 })
             ingredients_list.add(ingredient)
         return value
