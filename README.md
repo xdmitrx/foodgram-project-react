@@ -34,3 +34,6 @@ Dmitriy Belikov
 
 ### Check it out at...  
 51.250.69.189/
+
+Admin: dmtrybelickov@gmail.com
+Password: 123
