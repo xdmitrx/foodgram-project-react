@@ -44,9 +44,9 @@ class CustomUserViewSet(UserViewSet):
         author = get_object_or_404(User, id=user_id)
 
         if request.method == 'POST':
-            serializer = SubscribtionSerializer(author,
-                                                data=request.data,
-                                                context={"request": request})
+            serializer = CustomUserSerializer(author,
+                                              data=request.data,
+                                              context={"request": request})
             serializer.is_valid()
             Subscribtion.objects.create(user=user, author=author)
             return Response(serializer.data, status=status.HTTP_201_CREATED)

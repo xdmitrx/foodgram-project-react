@@ -28,6 +28,17 @@ python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.
 ### API
 Documentations with example requests and responses availiable at   
 51.250.69.189/api/docs/redoc  
+
+### Examples
+
+[GET] /api/users/ 
+[POST] /api/users/ 
+[GET] /api/tags/ 
+[POST] /api/recipes/ 
+[GET] /api/recipes/download_shopping_cart/
+[POST] /api/recipes/{id}/favorite/ 
+[DEL] /api/users/{id}/subscribe/
+[GET] /api/ingredients/ 
   
 ### Author:
 Dmitriy Belikov
